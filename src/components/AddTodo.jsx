@@ -1,11 +1,26 @@
 import { useState } from 'react'
+import { useMutation } from '@apollo/client'
 import { Button, FormControl, Input } from '@chakra-ui/react'
+
+import { ADD_TODO, ALL_TODO } from '../apollo/todos'
 
 const AddTodo = () => {
   const [text, setText] = useState('')
+  const [addTodo, { error }] = useMutation(ADD_TODO, {
+    refetchQueries: [
+      { query: ALL_TODO },
+    ],
+  })
 
   const handleAddTodo = () => {
     if (text.trim().length) {
+      addTodo({
+        variables: {
+          title: text,
+          userId: 123,
+          completed: false,
+        }
+      })
       setText('')
     }
   }
@@ -14,6 +29,10 @@ const AddTodo = () => {
     if (event.key === 'Enter') {
       handleAddTodo()
     }
+  }
+
+  if (error) {
+    return <h2>Error...</h2>
   }
 
   return (
