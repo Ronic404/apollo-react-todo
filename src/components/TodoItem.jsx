@@ -1,6 +1,6 @@
 import { Checkbox, CloseButton, HStack, Text } from '@chakra-ui/react'
 
-const TodoItem = ({ id, title, completed, onToggle }) => {
+const TodoItem = ({ id, title, completed, onToggle, onDelete }) => {
   const handleChangeCheckbox = () => {
     onToggle({
       variables: {
@@ -10,11 +10,19 @@ const TodoItem = ({ id, title, completed, onToggle }) => {
     })
   }
 
+  const handleClickButton = () => {
+    onDelete({
+      variables: {
+        id,
+      }
+    })
+  }
+
   return (
     <HStack spacing={3}>
       <Checkbox isChecked={completed} onChange={handleChangeCheckbox} />
       <Text>{title}</Text>
-      <CloseButton />
+      <CloseButton onClick={handleClickButton} />
     </HStack>
   )
 }
