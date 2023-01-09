@@ -1,19 +1,20 @@
-import { useQuery } from '@apollo/client'
 import { Spinner, VStack } from '@chakra-ui/react'
+import { useMutation, useQuery } from '@apollo/client'
 
 import TodoItem from './TodoItem'
 import TotalCount from './TotalCount'
 
-import { ALL_TODO } from '../apollo/todos'
+import { ALL_TODO, UPDATE_TODO } from '../apollo/todos'
 
 const TodoList = () => {
   const { data, loading, error } = useQuery(ALL_TODO)
+  const [toggleTodo, { error: updateError }] = useMutation(UPDATE_TODO)
 
   if (loading) {
     return <Spinner />
   }
 
-  if (error) {
+  if (error || updateError) {
     return <h2>Error...</h2>
   }
 
@@ -21,7 +22,7 @@ const TodoList = () => {
     <>
       <VStack spacing={2} mt={4}>
         {data.todos.map((todo) => (
-          <TodoItem key={todo.id} {...todo} />
+          <TodoItem onToggle={toggleTodo} key={todo.id} {...todo} />
         ))}
       </VStack>
       <TotalCount />
